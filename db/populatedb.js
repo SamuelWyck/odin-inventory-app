@@ -43,7 +43,7 @@ let SQL = [
     ");",
     "",
     "INSERT INTO genres (name) ",
-    "VALUES ('thriller'), ('history'), ('mistery'), ('fantasy'), ('science fiction');",
+    "VALUES ('Thriller'), ('History'), ('Mistery'), ('Fantasy'), ('Science fiction');",
     "",
     "INSERT INTO books (title, pub_date, img_url) ",
     "VALUES ",
