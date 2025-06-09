@@ -54,11 +54,16 @@ main {
     background-color: var(--secondary-color)
 }
 
+.add-btns-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 4rem 0;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+
 .add-btn {
-    display: block;
-    width: fit-content;
     text-decoration: none;
-    margin: 4rem auto;
     color: var(--light-color);
     background-color: var(--primary-color);
     padding: .6rem 1.2rem;
