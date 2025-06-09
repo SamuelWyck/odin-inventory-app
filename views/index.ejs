@@ -6,6 +6,16 @@
     <title>The Bookshelf</title>
 </head>
 <body>
+<div id="root">
     <%- include("partials/header") %>
+    <main>
+        <a href="/new/book">Add Book</a>
+        <section class="all-books">
+            <% for (let book of books) { %>
+                <%- include("partials/book-card", {book: book}) %>
+            <% } %>
+        </section>
+    </main>
+</div>
 </body>
 </html>
