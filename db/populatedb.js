@@ -68,7 +68,14 @@ let SQL = [
     "('andy', 'weir');",
     "",
     "INSERT INTO book_authors (book_id, author_id) ",
-    "VALUES (1, 5), (2, 3), (3, 4), (4, 6), (5, 2), (6, 1);"
+    "VALUES (1, 5), (2, 3), (3, 4), (4, 6), (5, 2), (6, 1);",
+    "",
+    "CREATE TABLE IF NOT EXISTS admin (",
+    "id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,",
+    "password VARCHAR(20) NOT NULL",
+    ");",
+    "",
+    "INSERT INTO admin (password) VALUES ('books');"
 ];
 
 
