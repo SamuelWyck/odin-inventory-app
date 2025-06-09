@@ -1,9 +1,10 @@
 const asyncHandler = require("express-async-handler");
+const db = require("../db/querys.js");
 
 
 const indexGet = asyncHandler(async function(req, res) {
-    //get all books from db
-    return res.render("index", {books: []});
+    const books = await db.getAllBooks();
+    return res.render("index", {books: books});
 });
 
 
