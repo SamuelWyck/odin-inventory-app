@@ -6,9 +6,10 @@ const dateFormat = "Mon dd yyyy";
 
 async function getAllBooks() {
     const {rows} = await pool.query(
-        "SELECT b.id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a ON a.id = ba.author_id",
+        "SELECT ba.book_id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a ON a.id = ba.author_id",
         [dateFormat]
     );
+    console.log(rows)
     return rows;
 };
 
@@ -26,26 +27,29 @@ async function getAllGenres() {
 
 
 async function addBook(title, pub_date, img_url) {
-    await pool.query(
-        "INSERT INTO books (title, pub_date, img_url) VALUES ($1, $2, $3)",
+    const {rows} = await pool.query(
+        "INSERT INTO books (title, pub_date, img_url) VALUES ($1, $2, $3) RETURNING id",
         [title, pub_date, img_url]
     );
+    return rows[0].id;
 };
 
 
 async function addAuthor(firstName, lastName) {
-    await pool.query(
-        "INSERT INTO authors (first_name, last_name) VALUES ($1, $2)",
+    const {rows} = await pool.query(
+        "INSERT INTO authors (first_name, last_name) VALUES ($1, $2) RETURNING id",
         [firstName, lastName]
     );
+    return rows[0].id;
 };
 
 
 async function addGenre(name) {
-    await pool.query(
-        "INSERT INTO genres (name) VALUES ($1)",
+    const {rows} = await pool.query(
+        "INSERT INTO genres (name) VALUES ($1) RETURNING id",
         [name]
     );
+    return rows[0].id;
 };
 
 
@@ -113,6 +117,33 @@ async function createGenreLink(book_id, genre_id) {
 };
 
 
+async function checkBookExists(title, authorId) {
+    const {rows} = await pool.query(
+        "SELECT * FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id WHERE title = $1 AND ba.author_id = $2",
+        [title, authorId]
+    );
+    return rows.length === 1;
+};
+
+
+async function checkAuthorExists(id) {
+    const {rows} = await pool.query(
+        "SELECT * FROM authors WHERE id = $1",
+        [id]
+    );
+    return rows.length === 1;
+};
+
+
+async function checkGenreExists(id) {
+    const {rows} = await pool.query(
+        "SELECT * FROM genres WHERE id = $1",
+        [id]
+    );
+    return rows.length === 1;
+};
+
+
 async function checkPassword(password) {
     const {rows} = await pool.query("SELECT * FROM admin;");
 
@@ -136,5 +167,8 @@ module.exports = {
     deleteGenre,
     createAuthorLink,
     createGenreLink,
-    checkPassword
+    checkPassword,
+    checkBookExists,
+    checkAuthorExists,
+    checkGenreExists,
 };
