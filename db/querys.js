@@ -107,6 +107,13 @@ async function createGenreLink(book_id, genre_id) {
 };
 
 
+async function checkPassword(password) {
+    const {rows} = await pool.query("SELECT * FROM admin;");
+
+    const adminPassword = rows[0].password;
+    return password === adminPassword;
+};
+
 
 module.exports = {
     getAllBooks,
@@ -122,5 +129,6 @@ module.exports = {
     deleteAuthor,
     deleteGenre,
     createAuthorLink,
-    createGenreLink
+    createGenreLink,
+    checkPassword
 };
