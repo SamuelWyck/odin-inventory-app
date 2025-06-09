@@ -11,7 +11,7 @@
 <div id="root">
     <%- include("partials/header") %>
     <main>
-        <a class="add-btn" href="/new/book">Add Book</a>
+        <%- include("partials/add-btns") %>
         <section class="all-books">
             <% for (let book of books) { %>
                 <%- include("partials/book-card", {book: book}) %>
