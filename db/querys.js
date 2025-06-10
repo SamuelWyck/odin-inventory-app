@@ -116,10 +116,35 @@ async function createGenreLink(book_id, genre_id) {
 };
 
 
+async function updateAuthorLink(bookId, oldAuthorId, newAuthorId) {
+    await pool.query(
+        "UPDATE book_authors SET author_id = $3 WHERE book_id = $1 AND author_id = $2",
+        [bookId, oldAuthorId, newAuthorId]
+    );
+};
+
+
+async function updateGenreLink(bookId, oldGenreId, newGenreId) {
+    await pool.query(
+        "UPDATE book_genres SET genre_id = $3 WHERE book_id = $1 AND genre_id = $2",
+        [bookId, oldGenreId, newGenreId]
+    );
+}
+
+
 async function checkBookExists(title, authorId) {
     const {rows} = await pool.query(
         "SELECT * FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id WHERE title = $1 AND ba.author_id = $2",
         [title, authorId]
+    );
+    return rows.length === 1;
+};
+
+
+async function checkBookExistsExcluding(id, title, authorId) {
+    const {rows} = await pool.query(
+        "SELECT * FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id WHERE title = $2 AND ba.author_id = $3 AND b.id != $1",
+        [id, title, authorId]
     );
     return rows.length === 1;
 };
@@ -151,6 +176,15 @@ async function checkPassword(password) {
 };
 
 
+async function getBook(id) {
+    const {rows} = await pool.query(
+        "SELECT b.id, title, TO_CHAR(pub_date, 'YYYY-MM-DD') AS date, a.id AS authorid, g.id AS genreid, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a on a.id = ba.author_id JOIN book_genres AS bg ON bg.book_id = b.id JOIN genres AS g ON g.id = bg.genre_id WHERE b.id = $1",
+        [id]
+    );
+    return rows[0];
+};
+
+
 module.exports = {
     getAllBooks,
     getAllAuthors,
@@ -170,4 +204,8 @@ module.exports = {
     checkBookExists,
     checkAuthorExists,
     checkGenreExists,
+    getBook,
+    updateAuthorLink,
+    updateGenreLink,
+    checkBookExistsExcluding
 };
