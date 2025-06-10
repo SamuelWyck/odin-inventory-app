@@ -6,6 +6,7 @@
     <title>The Bookshelf</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" type="image/svg" href="/favicon.svg">
+    <script src="/script.js" defer></script>
 </head>
 <body>
 <div id="root">
@@ -62,6 +63,7 @@
                 <input type="text" value="<%= bookId %>" name="id" hidden>
                 <div class="edit-form-btns">
                     <button class="form-add-btn">Update Book</button>
+                    <input type="checkbox" id="del-checkbox" value="true" name="delete" hidden>
                     <button class="del-btn">Delete</button>
                 </div>
             <% } else { %>
