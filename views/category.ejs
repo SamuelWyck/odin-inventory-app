@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/svg" href="/favicon.svg">
+    <title>The Bookshelf</title>
+</head>
+<body>
+<div id="root">
+    <%- include("partials/header") %>
+    <main>
+        <%- include("partials/add-btns") %>
+        <p class="category-main-title"><%= title %></p>
+        <section class="all-books">
+            <% for (let book of books) { %>
+                <%- include("partials/book-card", {book: book}) %>
+            <% } %>
+        </section>
+    </main>
+    <%- include("partials/footer") %>
+</div>
+</body>
+</html>
