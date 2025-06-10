@@ -285,6 +285,15 @@ select:hover, select:focus {
     gap: 2rem 5rem;
 }
 
+.category-main-title {
+    text-align: center;
+    margin-bottom: 4rem;
+    color: var(--primary-color);
+    font-size: 1.6rem;
+    font-size: clamp(1rem, .6rem + 2vw, 1.6rem);
+    font-weight: bold;
+}
+
 @media screen and (width <= 500px) {
     header {
         flex-direction: column;
