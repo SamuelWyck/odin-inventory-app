@@ -14,7 +14,7 @@ async function getAllBooks() {
 
 
 async function getAllAuthors() {
-    const {rows} = await pool.query("SELECT * FROM authors");
+    const {rows} = await pool.query("SELECT *, CONCAT(first_name, ' ', last_name) AS name FROM authors");
     return rows;
 };
 
@@ -185,6 +185,15 @@ async function getBook(id) {
 };
 
 
+async function getAllBooksByAuthor(authorId) {
+    const {rows} = await pool.query(
+        "SELECT b.id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a ON a.id = ba.author_id WHERE a.id = $2",
+        [dateFormat, authorId]
+    );
+    return rows;
+};
+
+
 module.exports = {
     getAllBooks,
     getAllAuthors,
@@ -207,5 +216,6 @@ module.exports = {
     getBook,
     updateAuthorLink,
     updateGenreLink,
-    checkBookExistsExcluding
+    checkBookExistsExcluding,
+    getAllBooksByAuthor
 };
