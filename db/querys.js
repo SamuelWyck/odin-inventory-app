@@ -6,7 +6,7 @@ const dateFormat = "Mon dd yyyy";
 
 async function getAllBooks() {
     const {rows} = await pool.query(
-        "SELECT ba.book_id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a ON a.id = ba.author_id",
+        "SELECT b.id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a ON a.id = ba.author_id",
         [dateFormat]
     );
     return rows;
