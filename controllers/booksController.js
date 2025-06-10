@@ -159,10 +159,6 @@ const editBookGet = asyncHandler(async function(req, res) {
 
 
 const editBookPost = asyncHandler(async function(req, res, next) {
-    if (req.body.delete) {
-        return next();
-    }
-
     const password = req.body.password;
     const validPassword = await db.checkPassword(password);
     if (!validPassword) {
@@ -185,8 +181,13 @@ const editBookPost = asyncHandler(async function(req, res, next) {
             errors: [{msg: "Incorrect password"}]
         });
     }
+    
 
+    if (req.body.delete) {
+        return next();
+    }
 
+    
     const errors = validationResult(req);
     if ((!errors.isEmpty())) {
         const result = await Promise.all([
@@ -277,30 +278,6 @@ const editBookPost = asyncHandler(async function(req, res, next) {
 
 
 const deleteBookPost = asyncHandler(async function(req, res) {
-    const password = req.body.password;
-    const validPassword = await db.checkPassword(password);
-    if (!validPassword) {
-        const result = await Promise.all([
-            db.getAllAuthors(),
-            db.getAllGenres(),
-            db.getBook(req.body.id)
-        ]);
-        const [authors, genres, book] = result;
-        return res.status(400).render("bookForm", {
-            title: "Edit Book",
-            authors: authors,
-            genres: genres,
-            genreId: Number(req.body.genre),
-            authorId: Number(req.body.author),
-            edit: true,
-            bookTitle: req.body.title,
-            bookDate: req.body.pub_date,
-            bookId: book.id,
-            errors: [{msg: "Incorrect password"}]
-        });
-    }
-
-
     const book = await db.getBook(req.body.id);
     if (book.img_url !== defaultImg) {
         fs.unlink(path.resolve("public/" + book.img_url), function(err) {
@@ -309,7 +286,7 @@ const deleteBookPost = asyncHandler(async function(req, res) {
             }
         });
     }
-    
+
     await db.deleteBook(req.body.id);
 
     return res.redirect("/");
