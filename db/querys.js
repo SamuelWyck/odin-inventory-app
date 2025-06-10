@@ -9,7 +9,6 @@ async function getAllBooks() {
         "SELECT ba.book_id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a ON a.id = ba.author_id",
         [dateFormat]
     );
-    console.log(rows)
     return rows;
 };
 
