@@ -4,6 +4,7 @@ const app = express();
 const path = require("node:path");
 const indexRoute = require("./routes/indexRoute.js");
 const newRoute = require("./routes/newRoute.js");
+const editRoute = require("./routes/editRoute.js");
 
 
 app.set("view engine", "ejs");
@@ -15,7 +16,8 @@ app.use(express.urlencoded({extended: true}));
 
 
 app.use("/", indexRoute);
-app.use("/new", newRoute)
+app.use("/new", newRoute);
+app.use("/edit", editRoute);
 
 
 const PORT = process.env.PORT;
