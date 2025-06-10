@@ -3,6 +3,8 @@ const multer = require("multer");
 const {body, validationResult} = require("express-validator");
 const db = require("../db/querys.js");
 const {format} = require("date-fns");
+const fs = require("fs");
+const path = require("node:path");
 
 
 const storage = multer.diskStorage({
@@ -70,8 +72,8 @@ const newBookPost = asyncHandler(async function(req, res) {
             title: "New Book",
             authors: authors,
             genres: genres,
-            genreId: req.body.genre,
-            authorId: req.body.author,
+            genreId: Number(req.body.genre),
+            authorId: Number(req.body.author),
             edit: false,
             bookTitle: req.body.title,
             bookDate: req.body.pub_date,
@@ -80,8 +82,8 @@ const newBookPost = asyncHandler(async function(req, res) {
     }
 
     const title = titleCase(req.body.title);
-    const authorId = req.body.author;
-    const genreId = req.body.genre;
+    const authorId = Number(req.body.author);
+    const genreId = Number(req.body.genre);
 
     const result = await Promise.all([
         db.checkAuthorExists(authorId),
@@ -131,6 +133,144 @@ const newBookPost = asyncHandler(async function(req, res) {
 });
 
 
+
+const editBookGet = asyncHandler(async function(req, res) {
+    const bookId = req.params.bookId;
+    const result = await Promise.all([
+        db.getAllAuthors(),
+        db.getAllGenres(),
+        db.getBook(bookId)
+    ]);
+    const [authors, genres, book] = result;
+
+    return res.render("bookForm", {
+        title: "Edit Book",
+        edit: true,
+        authors: authors,
+        genres: genres,
+        genreId: book.genreid,
+        authorId: book.authorid,
+        bookTitle: book.title.toLowerCase(),
+        bookDate: book.date,
+        bookId: book.id
+    });
+});
+
+
+
+const editBookPost = asyncHandler(async function(req, res) {
+    const password = req.body.password;
+    const validPassword = await db.checkPassword(password);
+    if (!validPassword) {
+        const result = await Promise.all([
+            db.getAllAuthors(),
+            db.getAllGenres(),
+            db.getBook(req.body.id)
+        ]);
+        const [authors, genres, book] = result;
+        return res.status(400).render("bookForm", {
+            title: "Edit Book",
+            authors: authors,
+            genres: genres,
+            genreId: Number(req.body.genre),
+            authorId: Number(req.body.author),
+            edit: true,
+            bookTitle: req.body.title,
+            bookDate: req.body.pub_date,
+            bookId: book.id,
+            errors: [{msg: "Incorrect password"}]
+        });
+    }
+
+
+    const errors = validationResult(req);
+    if ((!errors.isEmpty())) {
+        const result = await Promise.all([
+            db.getAllAuthors(),
+            db.getAllGenres(),
+            db.getBook(req.body.id)
+        ]);
+        const [authors, genres, book] = result;
+        return res.status(400).render("bookForm", {
+            title: "Edit Book",
+            authors: authors,
+            genres: genres,
+            genreId: Number(req.body.genre),
+            authorId: Number(req.body.author),
+            edit: true,
+            bookTitle: req.body.title,
+            bookDate: req.body.pub_date,
+            bookId: book.id,
+            errors: errors.array()
+        });
+    }
+
+
+    const title = titleCase(req.body.title);
+    const authorId = Number(req.body.author);
+    const genreId = Number(req.body.genre);
+
+    const result = await Promise.all([
+        db.checkAuthorExists(authorId),
+        db.checkBookExistsExcluding(req.body.id, title, authorId),
+        db.checkGenreExists(genreId)
+    ]);
+
+    const [authorExists, bookExists, genreExists] = result;
+    if (!authorExists || bookExists || !genreExists) {
+        const result = await Promise.all([
+            db.getAllAuthors(),
+            db.getAllGenres(),
+            db.getBook(req.body.id)
+        ]);
+        const [authors, genres, book] = result;
+
+        let msg = null;
+        if (bookExists) {
+            msg = "Book is already on the shelf";
+        } else if (!authorExists) {
+            msg = "Author not found";
+        } else if (!genreExists) {
+            msg = "Genre not found";
+        }
+
+        return res.status(400).render("bookForm", {
+            title: "Edit Book",
+            authors: authors,
+            genres: genres,
+            genreId: genreId,
+            authorId: authorId,
+            edit: true,
+            bookTitle: req.body.title,
+            bookDate: req.body.pub_date,
+            bookId: book.id,
+            errors: [{msg: msg}]
+        });
+    }
+
+
+    const book = await db.getBook(req.body.id);
+    const date = format(req.body.pub_date, "yyyy MM dd");
+    const id = Number(req.body.id);
+    const img_url = (req.file !== undefined) ? bookImgDir + req.file.filename : book.img_url;
+
+    if (img_url !== book.img_url && book.img_url !== defaultImg) {
+        fs.unlink(path.resolve("public/" + book.img_url), function(err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    await Promise.all([
+        db.updateBook(id, title, date, img_url),
+        db.updateAuthorLink(id, book.authorid, authorId),
+        db.updateGenreLink(id, book.genreid, genreId)
+    ]);
+    return res.redirect("/");
+});
+
+
 function titleCase(string) {
     string = string.toLowerCase().trim();
     const words = string.split(" ");
@@ -163,5 +303,11 @@ module.exports = {
         upload.single("book-img"),
         validateBook,
         newBookPost,
+    ],
+    editBookGet,
+    editBookPost: [
+        upload.single("book-img"),
+        validateBook,
+        editBookPost
     ]
 };
