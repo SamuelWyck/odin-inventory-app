@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Bookshelf</title>
-    <link rel="stylesheet" href="../styles.css">
-    <link rel="icon" type="image/svg" href="favicon.svg">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/svg" href="/favicon.svg">
 </head>
 <body>
 <div id="root">
@@ -33,9 +33,7 @@
                     <label for="author">Author*</label>
                     <select name="author" id="author" required>
                         <% for (let author of authors) { %>
-                            <% if (!edit) { %>
-                                <option value="<%= author.id %>"><%= `${author.first_name} ${author.last_name}` %></option>
-                            <% } else if (author.id === authorId) { %>
+                            <% if (author.id === authorId) { %>
                                 <option value="<%= author.id %>" selected><%= `${author.first_name} ${author.last_name}` %></option>
                             <% } else { %>
                                 <option value="<%= author.id %>"><%= `${author.first_name} ${author.last_name}` %></option>
@@ -47,9 +45,7 @@
                     <label for="genre">Genre*</label>
                     <select name="genre" id="genre">
                         <% for (let genre of genres) { %>
-                            <% if (!edit) { %>
-                                <option value="<%= genre.id %>"><%= genre.name %></option>
-                            <% } else if (genre.id === genreId) { %>
+                            <% if (genre.id === genreId) { %>
                                 <option value="<%= genre.id %>" selected><%= genre.name %></option>
                             <% } else { %>
                                 <option value="<%= genre.id %>"><%= genre.name %></option>
@@ -60,12 +56,13 @@
             </div>
             <% if (edit) { %>
                 <div>
-                    <label for="password">Password</label>
+                    <label for="password">Password*</label>
                     <input type="password" name="password" id="password" required>
                 </div>
+                <input type="text" value="<%= bookId %>" name="id" hidden>
                 <div class="edit-form-btns">
-                    <button class="del-btn">Delete</button>
                     <button class="form-add-btn">Update Book</button>
+                    <button class="del-btn">Delete</button>
                 </div>
             <% } else { %>
                 <div class="add-form-btns">
