@@ -211,13 +211,15 @@ label.file-label {
     padding: .8rem 1.8rem;
     font-weight: bold;
     font-size: 1.2rem;
-    border: 3px outset black;
+    box-shadow: 2px 5px 5px 0px var(--dark-color);
     margin-left: 0;
     outline: none;
+    will-change: transform;
+    transition: transform .1s ease-in-out;
 }
 
 label.file-label:hover, label.file-label:focus {
-    border-style: inset;
+    transform: scale(1.1);
 }
 
 select {
@@ -239,13 +241,16 @@ select:hover, select:focus {
     font-weight: bold;
     color: var(--light-color);
     background-color: var(--primary-color);
-    padding: .5rem 1rem;
+    padding: .7rem 1.1rem;
     cursor: pointer;
-    border-width: 3px;
+    border: none;
+    box-shadow: 2px 5px 5px 0px var(--dark-color);
+    will-change: transform;
+    transition: transform .1s ease-in-out;
 }
 
 .form-add-btn:hover, .form-add-btn:focus {
-    border-style: inset;
+    transform: scale(1.1);
 }
 
 .form-errors {
