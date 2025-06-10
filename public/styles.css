@@ -146,6 +146,118 @@ footer {
     padding: 1rem 0;
 }
 
+p.book-form-title {
+    text-align: center;
+    margin: 4rem 0;
+    color: var(--primary-color);
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.form-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.book-form {
+    max-width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 5rem;
+}
+
+.book-details, .category-info {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+label {
+    display: block;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-left: .2rem;
+}
+
+input {
+    font-size: 1.2rem;
+    outline: none;
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    padding: .2rem .4rem;
+    border: 1px solid var(--primary-color);
+    width: 100%;
+    height: 2.5rem;
+}
+
+input:hover, input:focus {
+    border-color: var(--light-color);
+}
+
+input[type="file"] {
+    display: none;
+}
+
+label.file-label {
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    padding: .8rem 1.8rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 3px outset black;
+    margin-left: 0;
+    outline: none;
+}
+
+label.file-label:hover, label.file-label:focus {
+    border-style: inset;
+}
+
+select {
+    font-size: 1.2rem;
+    height: 2.5rem;
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    outline: none;
+    padding: .2rem;
+    border: 1px solid var(--primary-color);
+}
+
+select:hover, select:focus {
+    border-color: var(--light-color);
+}
+
+.form-add-btn {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--light-color);
+    background-color: var(--primary-color);
+    padding: .5rem 1rem;
+    cursor: pointer;
+    border-width: 3px;
+}
+
+.form-add-btn:hover, .form-add-btn:focus {
+    border-style: inset;
+}
+
+.form-errors {
+    margin-bottom: 1.5rem;
+    list-style: none;
+}
+
+.form-error {
+    color: crimson;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
 
 @media screen and (width <= 500px) {
     header {
