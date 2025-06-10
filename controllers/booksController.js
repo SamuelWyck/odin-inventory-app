@@ -18,6 +18,14 @@ const defaultImg = "book-imgs/default-img.jpeg";
 const bookImgDir = "book-imgs/";
 
 
+
+const booksGet = asyncHandler(async function(req, res) {
+    const books = await db.getAllBooks();
+    return res.render("books", {books: books});
+});
+
+
+
 const newBookGet = asyncHandler(async function(req, res) {
     const result = await Promise.all([
         db.getAllAuthors(),
@@ -35,6 +43,7 @@ const newBookGet = asyncHandler(async function(req, res) {
         edit: false
     });
 });
+
 
 
 const validateBook = [
@@ -146,7 +155,9 @@ function titleCase(string) {
 };
 
 
+
 module.exports = {
+    booksGet,
     newBookGet,
     newBookPost: [
         upload.single("book-img"),

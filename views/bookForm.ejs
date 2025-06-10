@@ -13,7 +13,7 @@
     <main class="form-main">
         <p class="book-form-title"><%= title %></p>
         <%- include("partials/errors") %>
-        <form class="book-form" action="/<%= (edit) ? 'edit' : 'new' %>/book" method="POST" enctype="multipart/form-data">
+        <form class="book-form" action="/books/<%= (edit) ? 'edit' : 'new' %>" method="POST" enctype="multipart/form-data">
             <div class="book-details">
                 <div>
                     <label for="title">Title*</label>
