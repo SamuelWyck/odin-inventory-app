@@ -192,7 +192,7 @@ input {
     color: var(--light-color);
     padding: .2rem .4rem;
     border: 1px solid var(--primary-color);
-    width: 100%;
+    width: 250px;
     height: 2.5rem;
 }
 
@@ -225,6 +225,7 @@ label.file-label:hover, label.file-label:focus {
 select {
     font-size: 1.2rem;
     height: 2.5rem;
+    width: 250px;
     background-color: var(--primary-color);
     color: var(--light-color);
     outline: none;
@@ -249,7 +250,7 @@ select:hover, select:focus {
     transition: transform .1s ease-in-out;
 }
 
-.form-add-btn:hover, .form-add-btn:focus {
+.form-add-btn:hover, .form-add-btn:focus, .del-btn:hover, .del-btn:focus {
     transform: scale(1.1);
 }
 
@@ -262,6 +263,26 @@ select:hover, select:focus {
     color: crimson;
     font-size: 1.2rem;
     font-weight: bold;
+}
+
+.del-btn {
+    cursor: pointer;
+    background-color: crimson;
+    color: var(--light-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: .7rem 1.1rem;
+    border: none;
+    box-shadow: 2px 5px 5px 0px var(--dark-color);
+    will-change: transform;
+    transition: transform .1s ease-in-out;
+}
+
+.edit-form-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem 5rem;
 }
 
 @media screen and (width <= 500px) {
