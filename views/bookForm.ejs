@@ -10,27 +10,27 @@
 <body>
 <div id="root">
     <%- include("partials/header") %>
-    <main>
+    <main class="form-main">
         <p class="book-form-title"><%= title %></p>
         <%- include("partials/errors") %>
-        <form action="/<%= (edit) ? 'edit' : 'new' %>/book" method="POST" enctype="multipart/form-data">
+        <form class="book-form" action="/<%= (edit) ? 'edit' : 'new' %>/book" method="POST" enctype="multipart/form-data">
             <div class="book-details">
                 <div>
-                    <label for="title">Title</label>
+                    <label for="title">Title*</label>
                     <input type="text" id="title" name="title" value="<%= locals.bookTitle %>" required>
                 </div>
                 <div>
-                    <label for="pub_date">Date Published</label>
+                    <label for="pub_date">Date Published*</label>
                     <input type="date" name="pub_date" id="pub_date" value="<%= locals.bookDate %>" required>
                 </div>
             </div>
             <div>
-                <label for="book-img">Book Image</label>
+                <label for="book-img" class="file-label" tabindex="0">Book Image</label>
                 <input type="file" accept=".jpg, .jpeg" id="book-img" name="book-img">
             </div>
             <div class="category-info">
                 <div>
-                    <label for="author">Author</label>
+                    <label for="author">Author*</label>
                     <select name="author" id="author" required>
                         <% for (let author of authors) { %>
                             <% if (!edit) { %>
@@ -44,7 +44,7 @@
                     </select>
                 </div>
                 <div>
-                    <label for="genre">Genre</label>
+                    <label for="genre">Genre*</label>
                     <select name="genre" id="genre">
                         <% for (let genre of genres) { %>
                             <% if (!edit) { %>
@@ -68,7 +68,7 @@
                     <button class="form-add-btn">Update Book</button>
                 </div>
             <% } else { %>
-                <div>
+                <div class="add-form-btns">
                     <button class="form-add-btn">Add Book</button>
                 </div>
             <% } %>
