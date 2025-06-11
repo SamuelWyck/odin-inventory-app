@@ -159,6 +159,15 @@ async function checkAuthorExists(id) {
 };
 
 
+async function checkAuthorExistsByName(firstname, lastname) {
+    const {rows} = await pool.query(
+        "SELECT * FROM authors WHERE first_name = $1 AND last_name = $2",
+        [firstname, lastname]
+    );
+    return rows.length === 1;
+};
+
+
 async function checkGenreExists(id) {
     const {rows} = await pool.query(
         "SELECT * FROM genres WHERE id = $1",
@@ -179,6 +188,15 @@ async function checkPassword(password) {
 async function getBook(id) {
     const {rows} = await pool.query(
         "SELECT b.id, title, TO_CHAR(pub_date, 'YYYY-MM-DD') AS date, a.id AS authorid, g.id AS genreid, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a on a.id = ba.author_id JOIN book_genres AS bg ON bg.book_id = b.id JOIN genres AS g ON g.id = bg.genre_id WHERE b.id = $1",
+        [id]
+    );
+    return rows[0];
+};
+
+
+async function getAuthor(id) {
+    const {rows} = await pool.query(
+        "SELECT *, CONCAT(first_name, ' ', last_name) AS name FROM authors WHERE id = $1",
         [id]
     );
     return rows[0];
@@ -217,5 +235,7 @@ module.exports = {
     updateAuthorLink,
     updateGenreLink,
     checkBookExistsExcluding,
-    getAllBooksByAuthor
+    getAllBooksByAuthor,
+    checkAuthorExistsByName,
+    getAuthor
 };
