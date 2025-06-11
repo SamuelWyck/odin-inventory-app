@@ -16,8 +16,8 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage});
 
 
-const defaultImg = "book-imgs/default-img.jpeg";
-const bookImgDir = "book-imgs/";
+const defaultImg = "/book-imgs/default-img.jpeg";
+const bookImgDir = "/book-imgs/";
 
 
 
@@ -260,7 +260,7 @@ const editBookPost = asyncHandler(async function(req, res, next) {
     const img_url = (req.file !== undefined) ? bookImgDir + req.file.filename : book.img_url;
 
     if (img_url !== book.img_url && book.img_url !== defaultImg) {
-        fs.unlink(path.resolve("public/" + book.img_url), function(err) {
+        fs.unlink(path.resolve("public" + book.img_url), function(err) {
             if (err) {
                 console.log(err);
             }
@@ -280,7 +280,7 @@ const editBookPost = asyncHandler(async function(req, res, next) {
 const deleteBookPost = asyncHandler(async function(req, res) {
     const book = await db.getBook(req.body.id);
     if (book.img_url !== defaultImg) {
-        fs.unlink(path.resolve("public/" + book.img_url), function(err) {
+        fs.unlink(path.resolve("public" + book.img_url), function(err) {
             if (err) {
                 console.log(err);
             }
