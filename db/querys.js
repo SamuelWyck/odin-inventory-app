@@ -6,7 +6,7 @@ const dateFormat = "Mon dd yyyy";
 
 async function getAllBooks() {
     const {rows} = await pool.query(
-        "SELECT b.id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b LEFT OUTER JOIN book_authors AS ba ON ba.book_id = b.id LEFT OUTER JOIN authors AS a ON a.id = ba.author_id",
+        "SELECT b.id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a ON a.id = ba.author_id",
         [dateFormat]
     );
     return rows;
@@ -117,25 +117,19 @@ async function createGenreLink(book_id, genre_id) {
 
 
 async function updateAuthorLink(bookId, oldAuthorId, newAuthorId) {
-    const {rowCount} = await pool.query(
+    await pool.query(
         "UPDATE book_authors SET author_id = $3 WHERE book_id = $1 AND author_id = $2",
         [bookId, oldAuthorId, newAuthorId]
     );
-    if (rowCount === 0) {
-        await createAuthorLink(bookId, newAuthorId);
-    }
 };
 
 
 async function updateGenreLink(bookId, oldGenreId, newGenreId) {
-    const {rowCount} = await pool.query(
+    await pool.query(
         "UPDATE book_genres SET genre_id = $3 WHERE book_id = $1 AND genre_id = $2",
         [bookId, oldGenreId, newGenreId]
     );
-    if (rowCount === 0) {
-        await createGenreLink(bookId, newGenreId);
-    }
-}
+};
 
 
 async function checkBookExists(title, authorId) {
@@ -196,13 +190,6 @@ async function getBook(id) {
         "SELECT b.id, title, TO_CHAR(pub_date, 'YYYY-MM-DD') AS date, a.id AS authorid, g.id AS genreid, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a on a.id = ba.author_id JOIN book_genres AS bg ON bg.book_id = b.id JOIN genres AS g ON g.id = bg.genre_id WHERE b.id = $1",
         [id]
     );
-    if (rows.length === 0) {
-        const {rows} = await pool.query(
-            "SELECT b.id, title, TO_CHAR(pub_date, 'YYYY-MM-DD') AS date, img_url FROM books AS b WHERE b.id = $1",
-            [id]
-        );
-        return rows[0];
-    }
     return rows[0];
 };
 
