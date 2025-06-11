@@ -145,6 +145,10 @@ const editBookGet = asyncHandler(async function(req, res) {
     ]);
     const [authors, genres, book] = result;
 
+    if (!book) {
+        return res.redirect("/");
+    }
+
     return res.render("bookForm", {
         title: "Edit Book",
         edit: true,
@@ -162,14 +166,15 @@ const editBookGet = asyncHandler(async function(req, res) {
 
 const editBookPost = asyncHandler(async function(req, res, next) {
     const password = req.body.password;
+    const bookId = Number(req.body.id);
+
     const validPassword = await db.checkPassword(password);
     if (!validPassword) {
         const result = await Promise.all([
             db.getAllAuthors(),
             db.getAllGenres(),
-            db.getBook(req.body.id)
         ]);
-        const [authors, genres, book] = result;
+        const [authors, genres] = result;
         return res.status(400).render("bookForm", {
             title: "Edit Book",
             authors: authors,
@@ -179,7 +184,7 @@ const editBookPost = asyncHandler(async function(req, res, next) {
             edit: true,
             bookTitle: req.body.title,
             bookDate: req.body.pub_date,
-            bookId: book.id,
+            bookId: bookId,
             errors: [{msg: "Incorrect password"}]
         });
     }
@@ -195,9 +200,8 @@ const editBookPost = asyncHandler(async function(req, res, next) {
         const result = await Promise.all([
             db.getAllAuthors(),
             db.getAllGenres(),
-            db.getBook(req.body.id)
         ]);
-        const [authors, genres, book] = result;
+        const [authors, genres] = result;
         return res.status(400).render("bookForm", {
             title: "Edit Book",
             authors: authors,
@@ -207,7 +211,7 @@ const editBookPost = asyncHandler(async function(req, res, next) {
             edit: true,
             bookTitle: req.body.title,
             bookDate: req.body.pub_date,
-            bookId: book.id,
+            bookId: bookId,
             errors: errors.array()
         });
     }
@@ -228,9 +232,8 @@ const editBookPost = asyncHandler(async function(req, res, next) {
         const result = await Promise.all([
             db.getAllAuthors(),
             db.getAllGenres(),
-            db.getBook(req.body.id)
         ]);
-        const [authors, genres, book] = result;
+        const [authors, genres] = result;
 
         let msg = null;
         if (bookExists) {
@@ -250,7 +253,7 @@ const editBookPost = asyncHandler(async function(req, res, next) {
             edit: true,
             bookTitle: req.body.title,
             bookDate: req.body.pub_date,
-            bookId: book.id,
+            bookId: bookId,
             errors: [{msg: msg}]
         });
     }
