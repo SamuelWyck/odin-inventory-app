@@ -387,7 +387,8 @@ select:hover, select:focus {
     color: var(--light-color);
     text-decoration: none;
     font-size: 1.2rem;
-    max-width: 20ch;
+    max-width: 16ch;
+    word-break: break-word;
 }
 
 .category-list > li {
