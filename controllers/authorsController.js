@@ -11,22 +11,17 @@ const authorsGet = asyncHandler(async function(req, res) {
         db.getAllBooksByAuthor(authorId)
     ]);
     const [authors, books] = result;
-    // addAuthorNames(authors);
+
 
     return res.render("category", {
         books: books,
         title: `Books by ${books[0].author}`,
         barTitle: "Authors",
-        categoryList: authors
+        categoryList: authors,
+        categoryName: "authors"
     });
 });
 
-
-function addAuthorNames(authors) {
-    for (let author of authors) {
-        author.name = `${author.first_name}  ${author.last_name}`;
-    }
-};
 
 
 module.exports = {
