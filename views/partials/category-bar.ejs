@@ -1,0 +1,15 @@
+<button class="category-bar-open-btn"><img src="/menu.svg" alt="menu"></button>
+<dialog class="category-bar hidden" closedby="closerrequest">
+    <div class="close-btn-wrapper">
+        <p class="category-bar-title" style="display: inline;"><%= locals.barTitle %></p>
+        <button type="button" class="close-bar-btn">X</button>
+    </div>
+    <ul class="category-list">
+        <% for (let choice of locals.categoryList) { %>
+            <li class="category-item">
+                <a class="category-choice-name" href="<%= `/${locals.categoryName}/${choice.id}` %>"><%= choice.name %></a>
+                <a href="<%= `/${locals.categoryName}/edit/${choice.id}` %>">Edit</a>
+            </li>
+        <% } %>
+    </ul>
+</dialog>
