@@ -104,7 +104,7 @@ const editAuthorGet = asyncHandler(async function(req, res) {
 
 
 
-const editAuthorPost = asyncHandler(async function(req, res) {
+const editAuthorPost = asyncHandler(async function(req, res, next) {
     const password = req.body.password;
     const authorId = Number(req.body.id);
 
@@ -118,6 +118,10 @@ const editAuthorPost = asyncHandler(async function(req, res) {
             authorId: authorId,
             errors: [{msg: "Incorrect password"}]
         });
+    }
+
+    if (req.body.delete) {
+        return next();
     }
 
     const firstName = capitalize(req.body.firstname);
@@ -154,7 +158,9 @@ const editAuthorPost = asyncHandler(async function(req, res) {
 const deleteAuthorPost = asyncHandler(async function(req, res) {
     const authorId = Number(req.body.id);
 
+    await db.deleteAuthor(authorId);
 
+    return res.redirect("/authors");
 });
 
 
@@ -169,6 +175,7 @@ module.exports = {
     editAuthorGet,
     editAuthorPost: [
         validateAuthor,
-        editAuthorPost
+        editAuthorPost,
+        deleteAuthorPost
     ]
 }
