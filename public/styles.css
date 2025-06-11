@@ -84,6 +84,7 @@ main {
     flex-direction: column;
     gap: 2rem;
     align-items: center;
+    justify-content: center;
     width: fit-content;
     padding: 2rem 2rem 3rem 2rem;
     box-shadow: 0px 0px 10px 0px var(--dark-color);
@@ -108,12 +109,18 @@ main {
     text-align: center;
 }
 
+.book-author {
+    max-width: 20ch;
+    word-break: break-word;
+}
+
 .book-info {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     gap: 1rem;
     color: var(--light-color);
+    align-items: center;
 }
 
 .book-card a {
@@ -288,12 +295,14 @@ select:hover, select:focus {
 }
 
 .category-main-title {
-    text-align: center;
-    margin-bottom: 4rem;
+    margin: 0 auto 4rem auto;
     color: var(--primary-color);
     font-size: 1.6rem;
     font-size: clamp(1rem, .6rem + 2vw, 1.6rem);
     font-weight: bold;
+    max-width: 40ch;
+    word-break: break-word;
+    text-align: center;
 }
 
 .category-bar {
