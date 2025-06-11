@@ -4,7 +4,7 @@
         <img src="<%= book.img_url %>" alt="<%= book.title %>">
     </div>
     <div class="book-info">
-        <p class="book-author"><%= (book.author !== " ") ? book.author : "Author Unknown" %></p>
+        <p class="book-author"><%= book.author %></p>
         <p class="book-date"><%= book.pub_date %></p>
     </div>
     <div class="edit-btn-wrapper">
