@@ -41,9 +41,11 @@ const newAuthorGet = asyncHandler(async function(req, res) {
 
 const validateAuthor = [
     body("firstname").trim()
-        .notEmpty().withMessage("Firstname must not be empty"),
+        .notEmpty().withMessage("Firstname must not be empty")
+        .isLength({max: 50}).withMessage("Firstname must be shorter than 50 characters"),
     body("lastname").trim()
         .notEmpty().withMessage("Lastname must not be empty")
+        .isLength({max: 50}).withMessage("Lastname must be shorter than 50 characters")
 ];
 
 
@@ -145,6 +147,14 @@ const editAuthorPost = asyncHandler(async function(req, res) {
 
     await db.updateAuthor(authorId, firstName, lastName);
     return res.redirect("/authors");
+});
+
+
+
+const deleteAuthorPost = asyncHandler(async function(req, res) {
+    const authorId = Number(req.body.id);
+
+
 });
 
 

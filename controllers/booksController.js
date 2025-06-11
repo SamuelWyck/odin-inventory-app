@@ -52,7 +52,8 @@ const newBookGet = asyncHandler(async function(req, res) {
 
 const validateBook = [
     body("title").trim()
-        .notEmpty().withMessage("Title cannot be empty"),
+        .notEmpty().withMessage("Title cannot be empty")
+        .isLength({max: 150}).withMessage("Title must be shorter than 150 characters"),
     body("genre").trim()
         .notEmpty().withMessage("Must select a genre"),
     body("author").trim()
