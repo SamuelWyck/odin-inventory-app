@@ -87,6 +87,10 @@ const newAuthorPost = asyncHandler(async function(req, res) {
 const editAuthorGet = asyncHandler(async function(req, res) {
     const authorId = Number(req.params.authorid);
 
+    if (authorId === 0) {
+        return res.redirect("/authors");
+    }
+
     const author = await db.getAuthor(authorId);
 
     if (!author) {
@@ -107,6 +111,10 @@ const editAuthorGet = asyncHandler(async function(req, res) {
 const editAuthorPost = asyncHandler(async function(req, res, next) {
     const password = req.body.password;
     const authorId = Number(req.body.id);
+
+    if (authorId === 0) {
+        return res.redirect("/authors");
+    }
 
     const passwordValid = await db.checkPassword(password);
     if (!passwordValid) {    
