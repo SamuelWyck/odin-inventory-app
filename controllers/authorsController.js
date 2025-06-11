@@ -15,6 +15,10 @@ const authorsGet = asyncHandler(async function(req, res) {
     ]);
     const [authors, books, author] = result;
 
+    if (!author) {
+        return res.redirect("/authors");
+    }
+
     return res.render("category", {
         books: books,
         title: `Books by ${author.name}`,
@@ -37,11 +41,9 @@ const newAuthorGet = asyncHandler(async function(req, res) {
 
 const validateAuthor = [
     body("firstname").trim()
-        .notEmpty().withMessage("Firstname must not be empty")
-        .matches(/^\w+$/).withMessage("Firstname must be a single word"),
+        .notEmpty().withMessage("Firstname must not be empty"),
     body("lastname").trim()
         .notEmpty().withMessage("Lastname must not be empty")
-        .matches(/^\w+$/).withMessage("Lastname must be a single word")
 ];
 
 
@@ -58,8 +60,8 @@ const newAuthorPost = asyncHandler(async function(req, res) {
         });
     }
 
-    const firstname = capitalize(req.body.firstname.toLowerCase());
-    const lastname = capitalize(req.body.lastname.toLowerCase());
+    const firstname = capitalize(req.body.firstname);
+    const lastname = capitalize(req.body.lastname);
 
     const authorExists = await db.checkAuthorExistsByName(firstname, lastname);
 
@@ -80,11 +82,83 @@ const newAuthorPost = asyncHandler(async function(req, res) {
 
 
 
+const editAuthorGet = asyncHandler(async function(req, res) {
+    const authorId = Number(req.params.authorid);
+
+    const author = await db.getAuthor(authorId);
+
+    if (!author) {
+        return res.redirect("/authors");
+    }
+
+    return res.render("authorForm", {
+        title: "Edit Author",
+        edit: true,
+        firstname: author.first_name.toLowerCase(),
+        lastname: author.last_name.toLowerCase(),
+        authorId: author.id
+    });
+});
+
+
+
+const editAuthorPost = asyncHandler(async function(req, res) {
+    const password = req.body.password;
+    const authorId = Number(req.body.id);
+
+    const passwordValid = await db.checkPassword(password);
+    if (!passwordValid) {    
+        return res.render("authorForm", {
+            title: "Edit Author",
+            edit: true,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            authorId: authorId,
+            errors: [{msg: "Incorrect password"}]
+        });
+    }
+
+    const firstName = capitalize(req.body.firstname);
+    const lastName = capitalize(req.body.lastname);
+
+    const errors = validationResult(req);
+    const authorExists = await db.checkAuthorExistsByName(firstName, lastName);
+    if (!errors.isEmpty() || authorExists) {
+        let errMessages = [];
+        if (authorExists) {
+            authorError = [{msg: "Author already on shelf"}];
+            errMessages = errMessages.concat(authorError);
+        }
+        if (!errors.isEmpty()) {
+            errMessages = errMessages.concat(errors.array());
+        }
+        
+        return res.render("authorForm", {
+            title: "Edit Author",
+            edit: true,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            authorId: authorId,
+            errors: errMessages
+        });
+    }
+
+    await db.updateAuthor(authorId, firstName, lastName);
+    return res.redirect("/authors");
+});
+
+
+
 module.exports = {
     authorsGet,
     newAuthorGet,
     newAuthorPost: [
         validateAuthor,
         newAuthorPost
+    ],
+    editAuthorGet,
+    editAuthorPost: [
+        validateAuthor,
+        editAuthorPost
     ]
 }
