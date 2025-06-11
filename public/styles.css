@@ -10,7 +10,6 @@ html {
     font-size: 16px;
     font-family: "roboto", sans-serif;
     --primary-color: #241E4E;
-    /* --secondary-color: #C8D3D5; */
     --secondary-color: #a2bac9;
     --dark-color: #111111;
     --light-color: #FCFAFA;
@@ -18,6 +17,8 @@ html {
 
 #root {
     min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
     display: grid;
     grid-template-rows: min-content 1fr min-content;
 }
@@ -293,6 +294,135 @@ select:hover, select:focus {
     font-size: clamp(1rem, .6rem + 2vw, 1.6rem);
     font-weight: bold;
 }
+
+.category-bar {
+    position: fixed;
+    top: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    border: none;
+    background-color: var(--primary-color);
+    padding: 1rem;
+    box-shadow: 0px 0px 10px 0px var(--dark-color);
+    transform-origin: left;
+    animation-name: slidein;
+    animation-fill-mode: backwards;
+    animation-duration: .5s;
+    animation-timing-function: ease-in-out;
+}
+
+.category-bar-open-btn {
+    position: fixed;
+    top: 20%;
+    display: flex;
+    border: none;
+    background-color: var(--primary-color);
+    cursor: pointer;
+    padding: .2rem;
+    box-shadow: 2px 5px 5px 0px var(--dark-color);
+    will-change: transform;
+    transition: transform .1s ease-in-out;
+    transform-origin: left;
+}
+
+.category-bar-open-btn:hover, 
+.close-bar-btn:hover,
+.category-list > li > :nth-child(2):hover  {
+    transform: scale(1.1);
+}
+
+.category-bar-open-btn > img {
+    filter: brightness(0) 
+    saturate(100%) 
+    invert(91%) sepia(3%) 
+    saturate(3078%) 
+    hue-rotate(174deg) 
+    brightness(82%) 
+    contrast(90%);
+    width: 43px;
+}
+
+.hidden {
+    display: none;
+}
+
+.close-btn-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.close-bar-btn {
+    cursor: pointer;
+    border: none;
+    background-color: var(--secondary-color);
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    padding: .2rem .6rem;
+    box-shadow: 2px 5px 5px 0px var(--dark-color);
+    will-change: transform;
+    transition: transform .1s ease-in-out;
+}
+
+.category-bar-title {
+    font-size: 1.5rem;
+    color: var(--light-color);
+}
+
+.category-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    height: 350px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.category-list > li > :first-child {
+    color: var(--light-color);
+    text-decoration: none;
+    font-size: 1.2rem;
+    max-width: 20ch;
+}
+
+.category-list > li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 2rem;
+}
+
+.category-list > li > :first-child:hover {
+    text-decoration: underline;
+}
+
+.category-list > li > :nth-child(2) {
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    background-color: var(--secondary-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    padding: .2rem .6rem;
+    box-shadow: 2px 5px 5px 0px var(--dark-color);
+    will-change: transform;
+    transition: transform .1s ease-in-out;
+}
+
+
+@keyframes slidein {
+    0% {transform: scaleX(0); opacity: 0;}
+    70% {transform: scaleX(1.1);}
+    100% {transform: scaleX(1); opacity: 1;}
+}
+
 
 @media screen and (width <= 500px) {
     header {
