@@ -20,6 +20,20 @@ app.use("/genres", genresRoute);
 app.use("/", booksRoute);
 
 
+app.use(function(req, res) {
+    return res.render("errorPage", {
+        errorMessage: "Error 404: Page not Found"
+    });
+});
+
+app.use(function(error, req, res, next) {
+    console.log(error);
+    res.render("errorPage", {
+        errorMessage: "Error 500: Internal Server Error"
+    });
+});
+
+
 const PORT = process.env.PORT;
 
 app.listen(PORT, function() {console.log(`Server listening on port ${PORT}!`)});
