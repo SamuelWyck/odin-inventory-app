@@ -177,6 +177,15 @@ async function checkGenreExists(id) {
 };
 
 
+async function checkGenreExistsByName(genreName) {
+    const {rows} = await pool.query(
+        "SELECT * FROM genres WHERE name = $1",
+        [genreName]
+    );
+    return rows.length === 1;
+};
+
+
 async function checkPassword(password) {
     const {rows} = await pool.query("SELECT * FROM admin;");
 
@@ -257,5 +266,6 @@ module.exports = {
     checkAuthorExistsByName,
     getAuthor,
     getGenre,
-    getBooksByGenre
+    getBooksByGenre,
+    checkGenreExistsByName
 };
