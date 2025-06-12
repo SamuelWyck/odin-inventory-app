@@ -71,11 +71,82 @@ const newGenrePost = asyncHandler(async function(req, res) {
 
 
 
+const editGenreGet = asyncHandler(async function(req, res) {
+    const genreId = Number(req.params.genreId);
+
+    if (genreId === 0) {
+        return res.redirect("/genres");
+    }
+
+    const genre = await db.getGenre(genreId);
+
+    return res.render("genreForm", {
+        title: "Edit Genre",
+        edit: true,
+        genreId: genreId,
+        genreName: genre.name.toLowerCase()
+    });
+});
+
+
+
+const editGenrePost = asyncHandler(async function(req, res) {
+    const genreId = Number(req.body.id);
+    const password = req.body.password;
+
+    if (genreId === 0) {
+        return res.redirect("/genres");
+    }
+
+    const passwordValid = await db.checkPassword(password);
+    if(!passwordValid) {
+        return res.status(400).render("genreForm", {
+            title: "Edit Genre",
+            edit: true,
+            genreId: genreId,
+            genreName: req.body.genreName,
+            errors: [{msg: "Incorrect password"}]
+        });
+    }
+
+    const genreName = capitalize(req.body.genreName);
+    const errors = validationResult(req);
+    const genreExists = await db.checkGenreExistsByName(genreName);
+
+    if (!errors.isEmpty() || genreExists) {
+        let errMessages = [];
+        if (!errors.isEmpty()) {
+            errMessages = errMessages.concat(errors.array());
+        }
+        if (genreExists) {
+            errMessages = errMessages.concat([{msg: "Genre already on shelf"}]);
+        }
+
+        return res.status(400).render("genreForm", {
+            title: "Edit Genre",
+            edit: true,
+            genreId: genreId,
+            genreName: req.body.genreName,
+            errors: errMessages
+        });
+    }
+
+    await db.updateGenre(genreId, genreName);
+    return res.redirect("/genres");
+});
+
+
+
 module.exports = {
     genresGet,
     newGenreGet,
     newGenrePost: [
         validateGenre,
         newGenrePost
+    ],
+    editGenreGet,
+    editGenrePost: [
+        validateGenre,
+        editGenrePost
     ]
 };
