@@ -203,10 +203,28 @@ async function getAuthor(id) {
 };
 
 
+async function getGenre(id) {
+    const {rows} = await pool.query(
+        "SELECT * FROM genres WHERE id = $1",
+        [id]
+    );
+    return rows[0];
+};
+
+
 async function getAllBooksByAuthor(authorId) {
     const {rows} = await pool.query(
         "SELECT b.id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a ON a.id = ba.author_id WHERE a.id = $2",
         [dateFormat, authorId]
+    );
+    return rows;
+};
+
+
+async function getBooksByGenre(genreId) {
+    const {rows} = await pool.query(
+        "SELECT b.id, title, TO_CHAR(pub_date, $1) AS pub_date, CONCAT(first_name, ' ', last_name) AS author, img_url FROM books AS b JOIN book_authors AS ba ON ba.book_id = b.id JOIN authors AS a ON a.id = ba.author_id JOIN book_genres AS bg ON bg.book_id = b.id JOIN genres AS g ON g.id = bg.genre_id WHERE g.id = $2",
+        [dateFormat, genreId]
     );
     return rows;
 };
@@ -237,5 +255,7 @@ module.exports = {
     checkBookExistsExcluding,
     getAllBooksByAuthor,
     checkAuthorExistsByName,
-    getAuthor
+    getAuthor,
+    getGenre,
+    getBooksByGenre
 };
