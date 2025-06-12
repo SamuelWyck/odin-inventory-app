@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bookshelf</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/svg" href="/favicon.svg">
+    <script src="/bookFormScript.js" defer></script>
+</head>
+<body>
+<div id="root">
+    <%- include("partials/header") %>
+    <main class="form-main">
+        <p class="book-form-title"><%= title %></p>
+        <%- include("partials/errors") %>
+        <form class="book-form" action="/genres/<%= (edit) ? 'edit' : 'new' %>" method="POST">
+            <div class="book-details">
+                <div>
+                    <label for="genrename">Genre Name*</label>
+                    <input type="text" id="genrename" name="genreName" value="<%= locals.genreName %>" required>
+                </div>
+            </div>
+            <% if (edit) { %>
+                <div>
+                    <label for="password">Password*</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+                <input type="text" value="<%= authorId %>" name="id" hidden>
+                <div class="edit-form-btns">
+                    <button class="form-add-btn">Update Genre</button>
+                    <input type="checkbox" id="del-checkbox" value="true" name="delete" hidden>
+                    <button class="del-btn">Delete</button>
+                </div>
+            <% } else { %>
+                <div class="add-form-btns">
+                    <button class="form-add-btn">Add Genre</button>
+                </div>
+            <% } %>
+        </form>
+    </main>
+    <%- include("partials/footer") %>
+</div>
+</body>
+</html>
