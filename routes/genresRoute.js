@@ -6,7 +6,9 @@ const genresController = require("../controllers/genresController.js");
 const genresRoute = Router();
 
 
-genresRoute.use("/{:genreId}", genresController.genresGet);
+genresRoute.get("/new", genresController.newGenreGet);
+genresRoute.post("/new", genresController.newGenrePost);
+genresRoute.get("/{:genreId}", genresController.genresGet);
 
 
 
