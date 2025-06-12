@@ -90,7 +90,7 @@ const editGenreGet = asyncHandler(async function(req, res) {
 
 
 
-const editGenrePost = asyncHandler(async function(req, res) {
+const editGenrePost = asyncHandler(async function(req, res, next) {
     const genreId = Number(req.body.id);
     const password = req.body.password;
 
@@ -108,6 +108,12 @@ const editGenrePost = asyncHandler(async function(req, res) {
             errors: [{msg: "Incorrect password"}]
         });
     }
+
+
+    if (req.body.delete) {
+        return next();
+    }
+
 
     const genreName = capitalize(req.body.genreName);
     const errors = validationResult(req);
@@ -137,6 +143,16 @@ const editGenrePost = asyncHandler(async function(req, res) {
 
 
 
+const deleteGenrePost = asyncHandler(async function(req, res) {
+    const genreId = Number(req.body.id);
+
+    await db.deleteGenre(genreId);
+
+    return res.redirect("/genres");
+});
+
+
+
 module.exports = {
     genresGet,
     newGenreGet,
@@ -147,6 +163,7 @@ module.exports = {
     editGenreGet,
     editGenrePost: [
         validateGenre,
-        editGenrePost
+        editGenrePost,
+        deleteGenrePost
     ]
 };
