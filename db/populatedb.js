@@ -91,7 +91,7 @@ SQL = SQL.join("");
 async function main() {
     console.log("seeding...");
     const client = new Client({
-        connectionString: `postgresql://${argv[4]}:${argv[5]}@${argv[2]}/${argv[3]}`
+        connectionString: `postgresql://${argv[4]}:${argv[5]}@${argv[2]}/${argv[3]}?sslmode=require`
     });
     await client.connect();
     await client.query(SQL);
